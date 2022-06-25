@@ -89,10 +89,9 @@
             </Grid.RowDefinitions>
 
             <Label Grid.Row="0" FontSize="18" FontWeight="Bold">Report</Label>
-            <Label x:Name="FormReport" Grid.Row="1" Foreground="Red" FontSize="18" FontWeight="Bold" VerticalContentAlignment="Center"></Label>
+            <TextBlock x:Name="FormReportIssues" Grid.Row="1" Foreground="Red" FontSize="18" FontWeight="Bold"></TextBlock>
         </Grid>
-        <DataGrid Grid.Row="6" AutoGenerateColumns="True">
-            
+        <DataGrid Grid.Row="6" x:Name="FormReports">
         </DataGrid>
     </Grid>
 </Window>
