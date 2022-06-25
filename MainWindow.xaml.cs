@@ -30,10 +30,17 @@ namespace csharp_test
 
         private void FormClear_Click(object sender, RoutedEventArgs e)
         {
-            var newMain = new MainWindow();
-            newMain.Show();
-            newMain.Focus();
-            Close();
+            saveData = new SaveData();
+            saveData.FishType = new Fish();
+            FormFishType.Text = "";
+            FormMaxTemp.Text = "";
+            FormMaxTempTime.Text = "";
+            FormMinTemp.Text = "";
+            FormMinTempTime.Text = "";
+            FormReportIssues.Text = "";
+            FormDate.Text = "";
+            FormTemps.Text = "";
+            FormReports.ItemsSource = null;
         }
 
         private void FormSaveReport_Click(object sender, RoutedEventArgs e)
