@@ -137,28 +137,27 @@ namespace csharp_test
             int issue = 0; // 0 - no issue, 1 - max temp, 2 - min temp
             var tempReport = new List<Report>();
 
+            int maxTime = 0;
+            int minTime = 0;
+
             foreach(var temp in saveData.Temps)
             {
-                if (issue == 1 && temp < saveData.FishType.MaxTemp)
+                if (issue == 1 && temp <= saveData.FishType.MaxTemp)
                 {
-                    if (time <= saveData.FishType.MaxTemp)
+                    if (time >= saveData.FishType.MaxTempTime)
                     {
                         saveData.Reports.AddRange(tempReport);
-                        saveData.ReportIssues += "Max temp issue for " + 
-                            time + 
-                            " minutes\n";
+                        maxTime += time;
                     }
                     issue = 0;
                     time = 0;
                 }
-                else if (issue == 2 && temp > saveData.FishType.MinTemp)
+                else if (issue == 2 && temp >= saveData.FishType.MinTemp)
                 {
-                    if (time >= saveData.FishType.MinTemp)
+                    if (time >= saveData.FishType.MinTempTime)
                     {
                         saveData.Reports.AddRange(tempReport);
-                        saveData.ReportIssues += "Min temp issue for " + 
-                            time + 
-                            " minutes\n";
+                        minTime += time;
                     }
                     issue = 0;
                     time = 0;
@@ -199,19 +198,27 @@ namespace csharp_test
                 i++;
             }
 
-            if (time <= saveData.FishType.MaxTemp && issue == 1)
+            if (time >= saveData.FishType.MaxTempTime && issue == 1)
             {
                 saveData.Reports.AddRange(tempReport);
-                saveData.ReportIssues += "Max temp issue for " + 
-                    time + 
-                    " minutes\n";
+                maxTime += time;
             }
-            else if (time >= saveData.FishType.MinTemp && issue == 2)
+            else if (time >= saveData.FishType.MinTempTime && issue == 2)
             {
                 saveData.Reports.AddRange(tempReport);
-                saveData.ReportIssues += "Min temp issue for " + 
-                    time + 
-                    " minutes\n";
+                minTime += time;
+            }
+
+            if (maxTime > 0)
+            {
+                saveData.ReportIssues += "Max temp issue for " +
+                    maxTime + " minutes\n";
+            }
+
+            if (minTime > 0)
+            {
+                saveData.ReportIssues += "Min temp issue for " +
+                    minTime + " minutes\n";
             }
         }
     }
