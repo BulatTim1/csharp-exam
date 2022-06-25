@@ -49,7 +49,10 @@ namespace csharp_test
             dlg.DefaultExt = ".csv";
             if (dlg.ShowDialog() == true)
             {
-                UpdateReport();
+                if (!UpdateReport())
+                {
+                    return;
+                }
                 try
                 {
                     FileSaveLoad.SaveReport(saveData, dlg.FileName);
@@ -95,13 +98,21 @@ namespace csharp_test
 
         private void FormMakeReport_Click(object sender, RoutedEventArgs e)
         {
-            UpdateReport();
+            if (!UpdateReport()) return;
             FormReportIssues.Text = saveData.ReportIssues;
             FormReports.Columns.Clear();
             FormReports.ItemsSource = saveData.Reports;
+
+            if (saveData.ReportIssues != "")
+            {
+                MessageBox.Show("Report issues: " + saveData.ReportIssues, "Report issues", MessageBoxButton.OK);
+            } else
+            {
+                FormReportIssues.Text = "Everything is fine";
+            }
         }
 
-        private void UpdateReport()
+        private bool UpdateReport()
         {
             int minTemp = 0, minTempTime = 0;
             bool isParsed1 = int.TryParse(FormMinTemp.Text, out minTemp);
@@ -110,7 +121,15 @@ namespace csharp_test
             if (!isParsed1) minTemp = int.MinValue;
             if (!isParsed2) minTempTime = int.MaxValue;
 
-            saveData.Date = DateTime.Parse(FormDate.Text);
+            try
+            {
+                saveData.Date = DateTime.Parse(FormDate.Text);
+            }
+            catch
+            {
+                MessageBox.Show("Incorrect date", "Error", MessageBoxButton.OK);
+                return false;
+            }
             try
             {
                 saveData.FishType = new Fish()
@@ -124,8 +143,8 @@ namespace csharp_test
             }
             catch
             {
-                MessageBox.Show("Error", "Fill max temp and his time", MessageBoxButton.OK);
-                return;
+                MessageBox.Show("Fill max temp and his time", "Error", MessageBoxButton.OK);
+                return false;
             }
             saveData.ReportIssues = "";
 
@@ -134,7 +153,15 @@ namespace csharp_test
             {
                 if (temp != "")
                 {
-                    saveData.Temps.Add(int.Parse(temp));
+                    try
+                    {
+                        saveData.Temps.Add(int.Parse(temp));
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Incorrect temperatures", "Error", MessageBoxButton.OK);
+                        return false;
+                    }
                 }
             }
 
@@ -227,6 +254,7 @@ namespace csharp_test
                 saveData.ReportIssues += "Min temp issue for " +
                     minTime + " minutes\n";
             }
+            return true;
         }
     }
 }
